@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	hs "go-grpc-api-lab/api"
+	hs "go-grpc-api-lab/api/hello-world"
 
 	"google.golang.org/grpc"
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	api "go-grpc-api-lab/api"
+	api "go-grpc-api-lab/api/hello-world"
 
 	"google.golang.org/grpc"
 )
