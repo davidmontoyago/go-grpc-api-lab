@@ -5,7 +5,8 @@ import (
 	"log"
 	"net"
 
-	hs "github.com/davidmontoyago/go-grpc-api-lab/api"
+	hs "go-grpc-api-lab/api"
+
 	"google.golang.org/grpc"
 )
 
@@ -13,15 +14,15 @@ const (
 	port = ":50051"
 )
 
-// server is used to implement helloworld.GreeterServer.
+// server is used to implement api.HelloServiceServer
 type server struct {
 	hs.UnimplementedHelloServiceServer
 }
 
-// SayHello implements helloworld.GreeterServer
+// SayHello implements api.HelloServiceServer
 func (s *server) SayHello(ctx context.Context, in *hs.HelloRequest) (*hs.HelloResponse, error) {
 	log.Printf("Received: %v", in.GetGreeting())
-	return &hs.HelloResponse{Reply: "Hello " + "World"}, nil
+	return &hs.HelloResponse{Reply: "Hello " + in.Greeting}, nil
 }
 
 func main() {

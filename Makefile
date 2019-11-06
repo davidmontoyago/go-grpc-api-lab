@@ -13,6 +13,7 @@ all: test build
 build:
 	# go mod vendor
 	$(GOBUILD) -i -v -o ./bin/server ./server
+	$(GOBUILD) -i -v -o ./bin/client ./client
 
 test:
 	$(GOTEST) ./
@@ -23,9 +24,13 @@ clean:
 fmt:
 	$(GOCMD) fmt ./...
 
-run:
+run-server:
 	make build
-	./go-grpc-api-lab
+	./bin/server
+
+run-client:
+	make build
+	./bin/client
 
 grpc:
 	protoc -I api/ -I ${GOPATH}/src --go_out=plugins=grpc:api/ api/hello-service.proto
