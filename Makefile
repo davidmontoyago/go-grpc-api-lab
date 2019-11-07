@@ -8,15 +8,10 @@ GO111MODULE=off
 GOOS?=darwin
 GOARCH=amd64
 
-all: test build
-
 build:
 	# go mod vendor
-	$(GOBUILD) -i -v -o ./bin/hello-world/server ./hello-world/server
-	$(GOBUILD) -i -v -o ./bin/hello-world/client ./hello-world/client
-
-test:
-	$(GOTEST) ./
+	$(GOBUILD) -i -v -o ./bin/$(example)/server ./$(example)/server
+	$(GOBUILD) -i -v -o ./bin/$(example)/client ./$(example)/client
 
 clean:
 	$(GOCLEAN)
@@ -25,12 +20,13 @@ fmt:
 	$(GOCMD) fmt ./...
 
 run-server:
-	make build
-	./bin/hello-world/server
+	make build example=$(example)
+	./bin/$(example)/server
 
 run-client:
-	make build
-	./bin/hello-world/client
+	make build example=$(example)
+	./bin/$(example)/client
 
 grpc:
 	protoc -I api/ -I ${GOPATH}/src --go_out=plugins=grpc:api api/hello-world/hello-service.proto
+	protoc -I api/ -I ${GOPATH}/src --go_out=plugins=grpc:api api/client-streaming/streaming-service.proto

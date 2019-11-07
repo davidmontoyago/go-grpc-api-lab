@@ -1,0 +1,26 @@
+syntax = "proto3";
+package api;
+
+// streams event data from a server back to a client
+service EventStreamingService {
+
+  rpc GetEventStream(EventRequest) returns (stream Event);
+
+}
+
+enum EventType {
+  CREATE = 0;
+  UPDATE = 10;
+  DELETE = 20;
+}
+
+message EventRequest {
+  EventType type = 1;
+}
+
+message Event {
+  string id = 1;
+  EventType type = 10;
+  string description = 20;
+  string sourceApplication = 30;
+}
