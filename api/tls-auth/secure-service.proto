@@ -1,0 +1,16 @@
+syntax = "proto3";
+package api;
+
+service SecureService {
+
+  rpc CheckMyCreds(SecureRequest) returns (SecureResponse);
+
+}
+
+message SecureRequest {
+  string data = 1;
+}
+
+message SecureResponse {
+  bool success = 1;
+}

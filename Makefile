@@ -30,3 +30,4 @@ run-client:
 grpc:
 	protoc -I api/ -I ${GOPATH}/src --go_out=plugins=grpc:api api/hello-world/hello-service.proto
 	protoc -I api/ -I ${GOPATH}/src --go_out=plugins=grpc:api api/client-streaming/streaming-service.proto
+	protoc -I api/ -I ${GOPATH}/src --go_out=plugins=grpc:api api/tls-auth/secure-service.proto

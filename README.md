@@ -15,6 +15,7 @@
 |---	|---	|---	|
 | Simple Hello World  	| `./api/hello-world/`  	| `./hello-world/`  	|
 | Stream data down to multiple clients. <br/> Keeps an in-mem broker to subscribe clients and broadcast to all. | `./api/client-streaming/`  	  | `./client-streaming/`  	|
+| TLS Server Authentication | `./api/tls-auth/`  	  | `./tls-auth/`  	|
 
 ### Compile all .protos
 
@@ -35,9 +36,9 @@ make run-server example=client-streaming
 ### Run a client
 
 ``` bash
-# example is the name of the example server to run
+# example is the name of the example client to run
 make run-client example=example-name
 
-# for instance, run server for ./client-streaming example
+# for instance, run client for ./client-streaming example
 make run-client example=client-streaming
 ```
