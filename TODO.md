@@ -2,8 +2,7 @@
 
 - stream chunked data
 - throttling
-- auth
-- tls
+- mutual tls
 - error handling
 - timeouts
 - client side load balancing
