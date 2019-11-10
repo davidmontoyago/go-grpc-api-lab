@@ -16,6 +16,7 @@
 | Simple Hello World  	| `./api/hello-world/`  	| `./hello-world/`  	|
 | Stream data down to multiple clients. <br/> Keeps an in-mem broker to subscribe clients and broadcast to all. | `./api/client-streaming/`  	  | `./client-streaming/`  	|
 | TLS Server Authentication | `./api/tls-auth/`  	  | `./tls-auth/`  	|
+| Mutual TLS Authentication. Uses in-mem copy of the host trustore to append self signed cert. | `./api/tls-auth/`  	  | `./mtls-auth/`  	|
 
 ### Compile all .protos
 

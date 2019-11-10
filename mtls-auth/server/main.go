@@ -6,9 +6,9 @@ import (
 	"net"
 
 	api "go-grpc-api-lab/api/tls-auth"
+	mtlsutil "go-grpc-api-lab/pkg/mtlsutil"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 )
 
 const (
@@ -17,8 +17,8 @@ const (
 
 // Do not check in certs to your repo! This is only for demo purposes. Inject them as env config
 const (
-	certFile = "./tls-auth/certs/self-signed-cert.pem"
-	keyFile  = "./tls-auth/certs/self-signed-key.pem"
+	certFile = "./mtls-auth/certs/self-signed-cert.pem"
+	keyFile  = "./mtls-auth/certs/self-signed-key.pem"
 )
 
 // Server is used to implement api.SecureService
@@ -33,10 +33,9 @@ func (s *Server) CheckMyCreds(ctx context.Context, req *api.SecureRequest) (*api
 }
 
 func main() {
-	// Configure server TLS creds
-	creds, err := credentials.NewServerTLSFromFile(certFile, keyFile)
+	creds, err := mtlsutil.NewMutualTLSServerCreds(certFile, keyFile)
 	if err != nil {
-		log.Fatalf("unable to load tls config: %v", err)
+		log.Fatalf("unable to load server mtls config: %v", err)
 	}
 
 	s := grpc.NewServer(grpc.Creds(creds))
