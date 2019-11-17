@@ -4,6 +4,8 @@ go 1.12
 
 require (
 	github.com/golang/protobuf v1.3.2
+	github.com/opennota/check v0.0.0-20180911053232-0c771f5545ff // indirect
+	github.com/walle/lll v1.0.1 // indirect
 	golang.org/x/net v0.0.0-20191028085509-fe3aa8a45271 // indirect
 	golang.org/x/sys v0.0.0-20191028164358-195ce5e7f934 // indirect
 	golang.org/x/text v0.3.2 // indirect
