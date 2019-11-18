@@ -9,11 +9,13 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+
+	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/tracing"
 )
 
 func main() {
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(":50054", grpc.WithInsecure())
+	conn, err := grpc.Dial(":50054", grpc.WithInsecure(), grpc.WithUnaryInterceptor(tracing.UnaryClientInterceptor))
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}

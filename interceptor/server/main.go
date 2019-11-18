@@ -8,7 +8,8 @@ import (
 	hs "go-grpc-api-lab/api/hello-world"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
+
+	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/tracing"
 )
 
 const (
@@ -26,23 +27,13 @@ func (s *server) SayHello(ctx context.Context, in *hs.HelloRequest) (*hs.HelloRe
 	return &hs.HelloResponse{Reply: "Hello " + in.Greeting}, nil
 }
 
-// Telemetry Server side interceptor
-func TracingInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-	metadata, _ := metadata.FromIncomingContext(ctx)
-	log.Printf("tracing request with metadata: %v", metadata)
-	// TODO emit metric pre-handler with metadata
-	response, err := handler(ctx, req)
-	// TODO emit metric post-handler with metadata
-	return response, err
-}
-
 func main() {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer(grpc.UnaryInterceptor(TracingInterceptor))
+	s := grpc.NewServer(grpc.UnaryInterceptor(tracing.UnaryServerInterceptor))
 
 	hs.RegisterHelloServiceServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
