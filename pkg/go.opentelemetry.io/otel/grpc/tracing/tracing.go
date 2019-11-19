@@ -1,6 +1,7 @@
 package tracing
 
 // Open Telemetry gRPC Tracer integration
+// https://github.com/open-telemetry/opentelemetry-specification/blob/master/specification/data-rpc.md
 import (
 	"context"
 	"log"
@@ -13,10 +14,11 @@ import (
 )
 
 func init() {
-	initTracer()
+	grpc.EnableTracing = true
+	initOtelTracer()
 }
 
-func initTracer() {
+func initOtelTracer() {
 	exporter, err := stdout.NewExporter(stdout.Options{PrettyPrint: true})
 	if err != nil {
 		log.Fatal(err)
