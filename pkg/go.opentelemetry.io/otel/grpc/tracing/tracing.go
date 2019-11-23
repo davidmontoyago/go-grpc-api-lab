@@ -47,20 +47,29 @@ func UnaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.Una
 	return response, err
 }
 
-// UnaryClientInterceptor intercepts and injects outgoing trace data
+// UnaryClientInterceptor intercepts and injects outgoing trace
 func UnaryClientInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	requestMetadata, _ := metadata.FromOutgoingContext(ctx)
-	// TODO deal with this error
 	metadataCopy := requestMetadata.Copy()
-	grpctrace.Inject(ctx, &metadataCopy)
-	ctx = metadata.NewOutgoingContext(ctx, metadataCopy)
 
-	err := invoker(ctx, method, req, reply, cc, opts...)
+	tr := global.TraceProvider().GetTracer("example/grpc")
+	err := tr.WithSpan(ctx, "hello-api-op",
+		func(ctx context.Context) error {
+			grpctrace.Inject(ctx, &metadataCopy)
+			ctx = metadata.NewOutgoingContext(ctx, metadataCopy)
+
+			err := invoker(ctx, method, req, reply, cc, opts...)
+			setTraceStatus(ctx, err)
+			return err
+		})
+	return err
+}
+
+func setTraceStatus(ctx context.Context, err error) {
 	if err != nil {
 		status, _ := status.FromError(err)
 		trace.CurrentSpan(ctx).SetStatus(status.Code())
 	} else {
 		trace.CurrentSpan(ctx).SetStatus(codes.OK)
 	}
-	return err
 }

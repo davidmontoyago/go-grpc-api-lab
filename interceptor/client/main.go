@@ -23,10 +23,10 @@ func main() {
 
 	c := api.NewHelloServiceClient(conn)
 
-	// will this take the form of an OpenTelemetry context interface?
 	md := metadata.Pairs(
 		"timestamp", time.Now().Format(time.StampNano),
 		"client-id", "web-api-client-us-east-1",
+		"user-id", "some-test-user-id",
 	)
 	context := metadata.NewOutgoingContext(context.Background(), md)
 	response, err := c.SayHello(context, &api.HelloRequest{Greeting: "World"})
