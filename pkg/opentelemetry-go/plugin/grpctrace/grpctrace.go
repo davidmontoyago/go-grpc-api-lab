@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"go.opentelemetry.io/otel/api/core"
-	"go.opentelemetry.io/otel/api/key"
 	"go.opentelemetry.io/otel/propagation"
 	"google.golang.org/grpc/metadata"
 )
@@ -15,9 +14,6 @@ const (
 )
 
 var (
-	HostKey = key.New("http.host")
-	URLKey  = key.New("http.url")
-
 	propagator = propagation.HTTPTraceContextPropagator{}
 )
 
