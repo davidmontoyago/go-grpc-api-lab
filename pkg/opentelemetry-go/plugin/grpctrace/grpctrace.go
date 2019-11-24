@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	// Vendor is the integration provider
 	Vendor = "ot"
 )
 
