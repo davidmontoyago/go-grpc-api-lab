@@ -7,6 +7,9 @@ import (
 	"go-grpc-api-lab/pkg/opentelemetry-go/plugin/grpctrace"
 	"log"
 
+	"go.opentelemetry.io/otel/api/core"
+	"go.opentelemetry.io/otel/api/distributedcontext"
+	"go.opentelemetry.io/otel/api/key"
 	"go.opentelemetry.io/otel/api/trace"
 	"go.opentelemetry.io/otel/exporter/trace/stdout"
 	"go.opentelemetry.io/otel/global"
@@ -39,12 +42,30 @@ func initOtelTracer() {
 
 // UnaryServerInterceptor intercepts and extracts incoming trace data
 func UnaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-	metadata, _ := metadata.FromIncomingContext(ctx)
-	log.Printf("tracing request with metadata: %v", metadata)
-	// TODO Extract here
-	response, err := handler(ctx, req)
-	// TODO set status
-	return response, err
+	requestMetadata, _ := metadata.FromIncomingContext(ctx)
+	metadataCopy := requestMetadata.Copy()
+
+	entries, spanCtx := grpctrace.Extract(ctx, &metadataCopy)
+	ctx = distributedcontext.WithMap(ctx, distributedcontext.NewMap(distributedcontext.MapUpdate{
+		MultiKV: entries,
+	}))
+
+	grpcServerKey := key.New("grpc.server")
+	serverSpanAttrs := []core.KeyValue{
+		grpcServerKey.String("hello-world-server"),
+	}
+
+	tr := global.TraceProvider().GetTracer("example/grpc")
+	ctx, span := tr.Start(
+		ctx,
+		"hello-api-op",
+		trace.WithAttributes(serverSpanAttrs...),
+		trace.ChildOf(spanCtx),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	return handler(ctx, req)
 }
 
 // UnaryClientInterceptor intercepts and injects outgoing trace
