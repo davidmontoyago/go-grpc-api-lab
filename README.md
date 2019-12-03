@@ -17,7 +17,7 @@
 | Stream data down to multiple clients. <br/> Keeps an in-mem broker to subscribe clients and broadcast to all. | `./api/client-streaming/`  	  | `./client-streaming/`  	|
 | TLS Server Authentication | `./api/tls-auth/`  	  | `./tls-auth/`  	|
 | Mutual TLS Authentication. Uses in-mem copy of the host trustore to append self signed cert. | `./api/tls-auth/`  	  | `./tls-auth/`  	|
-| Tracing client/server interceptors with OpenTelemetry. | `./api/interceptor/`  	  | `./hello-world/`  	|
+| Tracing client/server interceptors with OpenTelemetry. | `./api/hello-world/` | `./opentelemetry-interceptor/` |
 
 ### Compile all .protos
 
