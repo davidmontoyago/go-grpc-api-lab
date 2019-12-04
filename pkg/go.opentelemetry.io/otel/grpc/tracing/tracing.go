@@ -6,14 +6,23 @@ import (
 	"context"
 	"go-grpc-api-lab/pkg/opentelemetry-go/plugin/grpctrace"
 	"log"
+	"time"
 
 	"go.opentelemetry.io/otel/api/core"
 	"go.opentelemetry.io/otel/api/distributedcontext"
 	"go.opentelemetry.io/otel/api/key"
+
 	"go.opentelemetry.io/otel/api/trace"
-	"go.opentelemetry.io/otel/exporter/trace/stdout"
-	"go.opentelemetry.io/otel/global"
+	traceExporter "go.opentelemetry.io/otel/exporter/trace/stdout"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+
+	metricExporter "go.opentelemetry.io/otel/exporter/metric/stdout"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/sdk/metric/batcher/defaultkeys"
+	"go.opentelemetry.io/otel/sdk/metric/controller/push"
+	"go.opentelemetry.io/otel/sdk/metric/selector/simple"
+
+	"go.opentelemetry.io/otel/api/global"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -22,10 +31,11 @@ import (
 
 func init() {
 	initOtelTracer()
+	initOtelMeter()
 }
 
 func initOtelTracer() {
-	exporter, err := stdout.NewExporter(stdout.Options{PrettyPrint: true})
+	exporter, err := traceExporter.NewExporter(traceExporter.Options{PrettyPrint: true})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,6 +47,21 @@ func initOtelTracer() {
 		log.Fatal(err)
 	}
 	global.SetTraceProvider(tp)
+}
+
+func initOtelMeter() {
+	exporter, err := metricExporter.New(metricExporter.Options{
+		PrettyPrint: true,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	selector := simple.NewWithExactMeasure()
+	batcher := defaultkeys.New(selector, sdkmetric.NewDefaultLabelEncoder(), false)
+	pusher := push.New(batcher, exporter, time.Second)
+	pusher.Start()
+
+	global.SetMeterProvider(pusher)
 }
 
 // UnaryServerInterceptor intercepts and extracts incoming trace data
