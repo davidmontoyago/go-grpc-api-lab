@@ -6,6 +6,7 @@ import (
 	"net"
 
 	hs "go-grpc-api-lab/api/hello-world"
+	"go-grpc-api-lab/opentelemetry-interceptor/config"
 
 	"google.golang.org/grpc"
 
@@ -28,6 +29,9 @@ func (s *server) SayHello(ctx context.Context, in *hs.HelloRequest) (*hs.HelloRe
 }
 
 func main() {
+	config.InitTracer()
+	defer config.InitMeter().Stop()
+
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

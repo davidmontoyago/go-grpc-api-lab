@@ -5,22 +5,12 @@ package tracing
 import (
 	"context"
 	"go-grpc-api-lab/pkg/opentelemetry-go/plugin/grpctrace"
-	"log"
-	"time"
 
 	"go.opentelemetry.io/otel/api/core"
 	"go.opentelemetry.io/otel/api/distributedcontext"
 	"go.opentelemetry.io/otel/api/key"
-
+	"go.opentelemetry.io/otel/api/metric"
 	"go.opentelemetry.io/otel/api/trace"
-	traceExporter "go.opentelemetry.io/otel/exporter/trace/stdout"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-
-	metricExporter "go.opentelemetry.io/otel/exporter/metric/stdout"
-	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/sdk/metric/batcher/defaultkeys"
-	"go.opentelemetry.io/otel/sdk/metric/controller/push"
-	"go.opentelemetry.io/otel/sdk/metric/selector/simple"
 
 	"go.opentelemetry.io/otel/api/global"
 	"google.golang.org/grpc"
@@ -28,41 +18,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
-
-func init() {
-	initOtelTracer()
-	initOtelMeter()
-}
-
-func initOtelTracer() {
-	exporter, err := traceExporter.NewExporter(traceExporter.Options{PrettyPrint: true})
-	if err != nil {
-		log.Fatal(err)
-	}
-	tp, err := sdktrace.NewProvider(
-		sdktrace.WithConfig(sdktrace.Config{DefaultSampler: sdktrace.AlwaysSample()}),
-		sdktrace.WithSyncer(exporter),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	global.SetTraceProvider(tp)
-}
-
-func initOtelMeter() {
-	exporter, err := metricExporter.New(metricExporter.Options{
-		PrettyPrint: true,
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	selector := simple.NewWithExactMeasure()
-	batcher := defaultkeys.New(selector, sdkmetric.NewDefaultLabelEncoder(), false)
-	pusher := push.New(batcher, exporter, time.Second)
-	pusher.Start()
-
-	global.SetMeterProvider(pusher)
-}
 
 // UnaryServerInterceptor intercepts and extracts incoming trace data
 func UnaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
@@ -97,8 +52,9 @@ func UnaryClientInterceptor(ctx context.Context, method string, req, reply inter
 	requestMetadata, _ := metadata.FromOutgoingContext(ctx)
 	metadataCopy := requestMetadata.Copy()
 
-	tr := global.TraceProvider().Tracer("example/grpc")
-	err := tr.WithSpan(ctx, "hello-api-op",
+	tracer := global.TraceProvider().Tracer("example/grpc")
+
+	err := tracer.WithSpan(ctx, "hello-api-op",
 		func(ctx context.Context) error {
 			grpctrace.Inject(ctx, &metadataCopy)
 			ctx = metadata.NewOutgoingContext(ctx, metadataCopy)
@@ -107,6 +63,31 @@ func UnaryClientInterceptor(ctx context.Context, method string, req, reply inter
 			setTraceStatus(ctx, err)
 			return err
 		})
+	return err
+}
+
+var (
+	appKey       = key.New("app")
+	operationKey = key.New("operation")
+)
+
+// UnaryClientMeteringInterceptor records custom app metrics
+func UnaryClientMeteringInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+	meter := global.MeterProvider().Meter("example/grpc")
+	labels := meter.Labels(appKey.String("example/grpc/client"), operationKey.String("hello-api-op"))
+
+	err := invoker(ctx, method, req, reply, cc, opts...)
+	if err != nil {
+		failedCallsMetric := meter.NewInt64Counter("example.grpc.client.calls.fail", metric.WithKeys(appKey, operationKey))
+		counter := failedCallsMetric.AcquireHandle(labels)
+		defer counter.Release()
+		counter.Add(ctx, 1)
+	} else {
+		successCallsMetric := meter.NewInt64Counter("example.grpc.client.calls.success", metric.WithKeys(appKey, operationKey))
+		counter := successCallsMetric.AcquireHandle(labels)
+		defer counter.Release()
+		counter.Add(ctx, 1)
+	}
 	return err
 }
 

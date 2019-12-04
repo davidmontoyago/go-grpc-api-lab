@@ -6,6 +6,7 @@ require (
 	github.com/bombsimon/wsl v1.2.8 // indirect
 	github.com/go-critic/go-critic v0.4.0 // indirect
 	github.com/golang/protobuf v1.3.2
+	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
 	github.com/opennota/check v0.0.0-20180911053232-0c771f5545ff // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect

@@ -6,16 +6,29 @@ import (
 	"time"
 
 	api "go-grpc-api-lab/api/hello-world"
+	"go-grpc-api-lab/opentelemetry-interceptor/config"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/tracing"
 )
 
 func main() {
+	config.InitTracer()
+	defer config.InitMeter().Stop()
+
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(":50054", grpc.WithInsecure(), grpc.WithUnaryInterceptor(tracing.UnaryClientInterceptor))
+	conn, err := grpc.Dial(":50054",
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(
+			grpc_middleware.ChainUnaryClient(
+				tracing.UnaryClientInterceptor,
+				tracing.UnaryClientMeteringInterceptor,
+			),
+		),
+	)
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}
