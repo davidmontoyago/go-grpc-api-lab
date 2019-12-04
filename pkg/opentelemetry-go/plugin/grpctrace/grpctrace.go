@@ -4,9 +4,10 @@ import (
 	"context"
 	"strings"
 
-	"go.opentelemetry.io/otel/api/core"
-	"go.opentelemetry.io/otel/propagation"
 	"google.golang.org/grpc/metadata"
+
+	"go.opentelemetry.io/otel/api/core"
+	"go.opentelemetry.io/otel/api/propagators"
 )
 
 const (
@@ -15,7 +16,7 @@ const (
 )
 
 var (
-	propagator = propagation.HTTPTraceContextPropagator{}
+	propagator = propagators.TraceContext{}
 )
 
 type metadataSupplier struct {

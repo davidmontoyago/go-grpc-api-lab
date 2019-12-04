@@ -54,7 +54,7 @@ func UnaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.Una
 		grpcServerKey.String("hello-world-server"),
 	}
 
-	tr := global.TraceProvider().GetTracer("example/grpc")
+	tr := global.TraceProvider().Tracer("example/grpc")
 	ctx, span := tr.Start(
 		ctx,
 		"hello-api-op",
@@ -72,7 +72,7 @@ func UnaryClientInterceptor(ctx context.Context, method string, req, reply inter
 	requestMetadata, _ := metadata.FromOutgoingContext(ctx)
 	metadataCopy := requestMetadata.Copy()
 
-	tr := global.TraceProvider().GetTracer("example/grpc")
+	tr := global.TraceProvider().Tracer("example/grpc")
 	err := tr.WithSpan(ctx, "hello-api-op",
 		func(ctx context.Context) error {
 			grpctrace.Inject(ctx, &metadataCopy)
