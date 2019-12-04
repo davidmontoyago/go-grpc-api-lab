@@ -10,7 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/tracing"
+	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
 )
 
 const (
@@ -37,7 +37,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer(grpc.UnaryInterceptor(tracing.UnaryServerInterceptor))
+	s := grpc.NewServer(grpc.UnaryInterceptor(trace.UnaryServerInterceptor))
 
 	hs.RegisterHelloServiceServer(s, &server{})
 	if err := s.Serve(lis); err != nil {

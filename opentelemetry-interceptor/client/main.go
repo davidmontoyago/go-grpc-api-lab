@@ -12,7 +12,8 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/tracing"
+	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
+	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/metric"
 )
 
 func main() {
@@ -24,8 +25,8 @@ func main() {
 		grpc.WithInsecure(),
 		grpc.WithUnaryInterceptor(
 			grpc_middleware.ChainUnaryClient(
-				tracing.UnaryClientInterceptor,
-				tracing.UnaryClientMeteringInterceptor,
+				trace.UnaryClientInterceptor,
+				metric.UnaryClientInterceptor,
 			),
 		),
 	)
