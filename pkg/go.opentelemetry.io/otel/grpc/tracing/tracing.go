@@ -21,7 +21,6 @@ import (
 )
 
 func init() {
-	grpc.EnableTracing = true
 	initOtelTracer()
 }
 
