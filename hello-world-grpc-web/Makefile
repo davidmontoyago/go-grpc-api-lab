@@ -9,10 +9,18 @@ GOOS?=darwin
 GOARCH=amd64
 
 pre-reqs:
-	curl -L -O "https://github.com/grpc/grpc-web/releases/download/1.0.7/protoc-gen-grpc-web-1.0.7-darwin-x86_64"
+	# install grpc-web protoc plugin
+	curl -LO "https://github.com/grpc/grpc-web/releases/download/1.0.7/protoc-gen-grpc-web-1.0.7-darwin-x86_64"
 	mv -f protoc-gen-grpc-web-1.0.7-darwin-x86_64 ~/bin/protoc-gen-grpc-web
 	chmod 750 ~/bin/protoc-gen-grpc-web
 
+	# install grpc-web proxy
+	curl -LO https://github.com/improbable-eng/grpc-web/releases/download/v0.12.0/grpcwebproxy-v0.12.0-osx-x86_64.zip
+	unzip -jo grpcwebproxy-v0.12.0-osx-x86_64.zip -d ~/bin/ && ln -sf ~/bin/grpcwebproxy-v0.12.0-osx-x86_64 ~/bin/grpcwebproxy
+	chmod 750 ~/bin/grpcwebproxy
+	rm grpcwebproxy-v0.12.0-osx-x86_64.zip
+
+	# install js app deps
 	cd client && npm install --save-dev webpack && cd -
 
 grpc:
@@ -31,9 +39,7 @@ run-server:
 	./bin/server
 
 run-client:
-	cd proxy && docker build -t grpc-web/envoy . && cd -
-	
-	docker ps -f name=grpc-web-proxy -q | xargs docker rm -f
-	docker run --name grpc-web-proxy -d -p 8080:8080 -p 50052:50052 --network="bridge" grpc-web/envoy
-	
+	pkill grpcwebproxy || true
+	grpcwebproxy --backend_addr=localhost:50051 --run_tls_server=false --allow_all_origins &
+
 	cd client && python3 -m http.server 8081

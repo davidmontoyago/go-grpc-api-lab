@@ -7,5 +7,5 @@ var request = new HelloRequest();
 request.setGreeting('World');
 
 client.sayHello(request, {}, (err, response) => {
-  console.log(response);
+  console.log(response.getReply());
 });
