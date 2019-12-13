@@ -1,5 +1,5 @@
 {
-    "name": "grpc-web-hello-world",
+    "name": "server-streaming-grpc-web",
     "version": "0.1.0",
     "devDependencies": {
         "@grpc/proto-loader": "^0.5.2",

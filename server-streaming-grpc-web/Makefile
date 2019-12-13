@@ -29,13 +29,13 @@ grpc:
 	# api/hello-world/hello-service_grpc_web_pb.js with the service stub for the web client
 	# api/hello-world/hello-service_pb.js with the js protobuf messages
 	#
-	protoc -I=./../api hello-world/hello-service.proto --js_out=import_style=commonjs:./../hello-world-grpc-web/client/api --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./../hello-world-grpc-web/client/api
+	protoc -I=./../api client-streaming/streaming-service.proto --js_out=import_style=commonjs:./../server-streaming-grpc-web/client/api --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./../server-streaming-grpc-web/client/api
 
 webpack:
 	cd ./client && npm install && npx webpack --mode development client.js && cd -
 
 run-server:
-	$(GOBUILD) -i -v -o ./bin/server ./server
+	$(GOBUILD) -i -v -o ./bin/server ./../client-streaming/server
 	./bin/server
 
 run-client:
