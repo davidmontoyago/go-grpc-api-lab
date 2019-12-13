@@ -18,7 +18,7 @@
 | TLS Server Authentication | `./api/tls-auth/`  	  | `./tls-auth/`  	|
 | Mutual TLS Authentication. Uses in-mem copy of the host trustore to append self signed cert. | `./api/tls-auth/`  	  | `./mtls-auth/`  	|
 | Tracing and metering client/server interceptors with OpenTelemetry. | `./api/hello-world/` | `./opentelemetry-interceptor/` |
-| Server streaming to web app with gRPC-Web and grpcwebproxy. | `./api/hello-world/` | `./server-streaming-grpc-web/` |
+| Server streaming to web app with gRPC-Web and grpcwebproxy. | `./api/client-streaming/` | `./server-streaming-grpc-web/` |
 
 ### Compile all .protos
 
