@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	api "go-grpc-api-lab/api/client-streaming"
+	api "go-grpc-api-lab/api/server-streaming"
 	"io"
 	"log"
 
@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(":50052", grpc.WithInsecure())
+	conn, err := grpc.Dial(":50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}

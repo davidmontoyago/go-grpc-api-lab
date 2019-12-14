@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	api "go-grpc-api-lab/api/client-streaming"
+	api "go-grpc-api-lab/api/server-streaming"
 	"math/rand"
 	"time"
 )

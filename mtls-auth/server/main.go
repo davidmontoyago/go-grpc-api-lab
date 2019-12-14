@@ -12,13 +12,13 @@ import (
 )
 
 const (
-	port = ":50053"
+	port = ":50051"
 )
 
 // Do not check in certs to your repo! This is only for demo purposes. Inject them as env config
 const (
-	certFile = "./mtls-auth/certs/self-signed-cert.pem"
-	keyFile  = "./mtls-auth/certs/self-signed-key.pem"
+	certFile = "./certs/self-signed-cert.pem"
+	keyFile  = "./certs/self-signed-key.pem"
 )
 
 // Server is used to implement api.SecureService

@@ -1,5 +1,5 @@
-const {EventRequest, EventType} = require('./api/client-streaming/streaming-service_pb.js');
-const {EventStreamingServiceClient} = require('./api/client-streaming/streaming-service_grpc_web_pb.js');
+const {EventRequest, EventType} = require('./api/server-streaming/streaming-service_pb.js');
+const {EventStreamingServiceClient} = require('./api/server-streaming/streaming-service_grpc_web_pb.js');
 
 var client = new EventStreamingServiceClient('http://localhost:8080');
 

@@ -12,7 +12,7 @@ import (
 
 // Do not check in certs to your repo! This is only for demo purposes. Inject them as env config
 const (
-	certFile = "./tls-auth/certs/self-signed-cert.pem"
+	certFile = "./certs/self-signed-cert.pem"
 )
 
 func main() {
@@ -22,8 +22,7 @@ func main() {
 	}
 
 	var conn *grpc.ClientConn
-	// conn, err := grpc.Dial(":50053", grpc.WithInsecure())
-	conn, err = grpc.Dial(":50053", grpc.WithTransportCredentials(creds))
+	conn, err = grpc.Dial(":50051", grpc.WithTransportCredentials(creds))
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}

@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	port = ":50054"
+	port = ":50051"
 )
 
 // server is used to implement api.HelloServiceServer

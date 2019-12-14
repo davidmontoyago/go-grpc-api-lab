@@ -12,8 +12,8 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
 	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/metric"
+	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	defer config.InitMeter().Stop()
 
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(":50054",
+	conn, err := grpc.Dial(":50051",
 		grpc.WithInsecure(),
 		grpc.WithUnaryInterceptor(
 			grpc_middleware.ChainUnaryClient(
