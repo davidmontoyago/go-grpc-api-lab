@@ -14,13 +14,30 @@ clean:
 fmt:
 	$(GOCMD) fmt ./...
 
-run-server:
+build-server:
 	$(GOBUILD) -i -v -o ./bin/server ./server
+
+build-client:
+	$(GOBUILD) -i -v -o ./bin/client ./client
+
+run-server:
+	make build-server
 	./bin/server
 
 run-client:
-	$(GOBUILD) -i -v -o ./bin/client ./client
+	make build-client
 	./bin/client
 
 grpc:
 	protoc -I ../api/ -I ${GOPATH}/src --go_out=plugins=grpc:../api ../api/tls-auth/secure-service.proto
+
+package:
+	make build-server GOOS=linux
+	make build-client GOOS=linux
+	docker build -t tls-grpc-app:latest .
+
+	# run in server mode
+	# docker run -it --rm --name=server -e mode=server -p 50051:50051 tls-grpc-app:latest
+
+	# run in client mode
+	# docker run -it --rm -e mode=client -e server_host=server --link=server tls-grpc-app:latest
