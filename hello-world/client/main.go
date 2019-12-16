@@ -7,6 +7,7 @@ import (
 	"os"
 
 	api "go-grpc-api-lab/api/hello-world"
+	"go-grpc-api-lab/pkg/osutil"
 
 	"google.golang.org/grpc"
 )
@@ -27,9 +28,6 @@ func main() {
 }
 
 func getAddress() string {
-	port, exists := os.LookupEnv("server_port")
-	if !exists {
-		port = "50051"
-	}
+	port := osutil.GetenvOrDefault("server_port", "50051")
 	return fmt.Sprintf("%s:%s", os.Getenv("server_host"), port)
 }

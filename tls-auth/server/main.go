@@ -6,6 +6,7 @@ import (
 	"net"
 
 	api "go-grpc-api-lab/api/tls-auth"
+	"go-grpc-api-lab/pkg/osutil"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -13,12 +14,6 @@ import (
 
 const (
 	port = ":50051"
-)
-
-// Do not check in certs to your repo! This is only for demo purposes. Inject them as env config
-const (
-	certFile = "./certs/self-signed-cert.pem"
-	keyFile  = "./certs/self-signed-key.pem"
 )
 
 // Server is used to implement api.SecureService
@@ -33,6 +28,9 @@ func (s *Server) CheckMyCreds(ctx context.Context, req *api.SecureRequest) (*api
 }
 
 func main() {
+	certFile := osutil.GetenvOrDefault("CERT_PEM", "./certs/self-signed-cert.pem")
+	keyFile := osutil.GetenvOrDefault("KEY_PEM", "./certs/self-signed-key.pem")
+
 	// Configure server TLS creds
 	creds, err := credentials.NewServerTLSFromFile(certFile, keyFile)
 	if err != nil {

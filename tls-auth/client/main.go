@@ -7,17 +7,14 @@ import (
 	"os"
 
 	api "go-grpc-api-lab/api/tls-auth"
+	"go-grpc-api-lab/pkg/osutil"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
 
-// Do not check in certs to your repo! This is only for demo purposes. Inject them as env config
-const (
-	certFile = "./certs/self-signed-cert.pem"
-)
-
 func main() {
+	certFile := osutil.GetenvOrDefault("CERT_PEM", "./certs/self-signed-cert.pem")
 	creds, err := credentials.NewClientTLSFromFile(certFile, "localhost")
 	if err != nil {
 		log.Fatalf("unable to load tls config: %v", err)
@@ -39,9 +36,8 @@ func main() {
 }
 
 func getAddress() string {
-	port, exists := os.LookupEnv("server_port")
-	if !exists {
-		port = "50051"
-	}
-	return fmt.Sprintf("%s:%s", os.Getenv("server_host"), port)
+	return fmt.Sprintf("%s:%s",
+		os.Getenv("server_host"),
+		osutil.GetenvOrDefault("server_port", "50051"),
+	)
 }
