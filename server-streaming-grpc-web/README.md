@@ -19,3 +19,15 @@ make grpc
 ```
 make webpack
 ```
+
+### Run client
+
+```
+make run-client
+
+# navigate to http://localhost:8081 & watch the console
+```
+
+# Bugs
+
+Currently experiencing ERR_INCOMPLETE_CHUNKED_ENCODING errors as described on https://github.com/grpc/grpc-web/issues/361.

@@ -29,6 +29,8 @@ make grpc
 
 go mod vendor
 
+go install ./...
+
 cd ./example
 make run-server
 make run-client

@@ -1,4 +1,4 @@
-// source: client-streaming/streaming-service.proto
+// source: server-streaming/streaming-service.proto
 /**
  * @fileoverview
  * @enhanceable
