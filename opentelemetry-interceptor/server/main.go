@@ -5,12 +5,13 @@ import (
 	"log"
 	"net"
 
-	hs "go-grpc-api-lab/api/hello-world"
-	"go-grpc-api-lab/opentelemetry-interceptor/config"
+	"github.com/davidmontoyago/go-grpc-api-lab/opentelemetry-interceptor/config"
+
+	hs "github.com/davidmontoyago/go-grpc-api-lab/api/hello-world"
 
 	"google.golang.org/grpc"
 
-	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
+	"github.com/davidmontoyago/go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
 )
 
 const (

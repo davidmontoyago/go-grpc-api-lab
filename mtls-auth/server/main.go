@@ -5,8 +5,8 @@ import (
 	"log"
 	"net"
 
-	api "go-grpc-api-lab/api/tls-auth"
-	mtlsutil "go-grpc-api-lab/pkg/mtlsutil"
+	api "github.com/davidmontoyago/go-grpc-api-lab/api/tls-auth"
+	mtlsutil "github.com/davidmontoyago/go-grpc-api-lab/pkg/mtlsutil"
 
 	"google.golang.org/grpc"
 )

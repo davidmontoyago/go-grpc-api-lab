@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
-	api "go-grpc-api-lab/api/server-streaming"
 	"io"
 	"log"
+
+	api "github.com/davidmontoyago/go-grpc-api-lab/api/server-streaming"
 
 	"google.golang.org/grpc"
 )

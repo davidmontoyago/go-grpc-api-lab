@@ -26,8 +26,8 @@ pre-reqs:
 grpc:
 	#
 	# generates:
-	# api/hello-world/hello-service_grpc_web_pb.js with the service stub for the web client
-	# api/hello-world/hello-service_pb.js with the js protobuf messages
+	# client/api/server-streaming/streaming-service_grpc_web_pb.js with the service stub for the web client
+	# client/api/server-streaming/streaming-service_pb.js with the js protobuf messages
 	#
 	protoc -I=./../api server-streaming/streaming-service.proto --js_out=import_style=commonjs:./../server-streaming-grpc-web/client/api --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./../server-streaming-grpc-web/client/api
 

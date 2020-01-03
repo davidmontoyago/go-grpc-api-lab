@@ -27,6 +27,8 @@
 # compile protos
 make grpc
 
+go mod vendor
+
 cd ./example
 make run-server
 make run-client

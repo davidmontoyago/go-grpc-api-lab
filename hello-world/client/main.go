@@ -6,8 +6,9 @@ import (
 	"log"
 	"os"
 
-	api "go-grpc-api-lab/api/hello-world"
-	"go-grpc-api-lab/pkg/osutil"
+	"github.com/davidmontoyago/go-grpc-api-lab/pkg/osutil"
+
+	api "github.com/davidmontoyago/go-grpc-api-lab/api/hello-world"
 
 	"google.golang.org/grpc"
 )

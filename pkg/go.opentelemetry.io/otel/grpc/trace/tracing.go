@@ -4,7 +4,8 @@ package trace
 // https://github.com/open-telemetry/opentelemetry-specification/blob/master/specification/data-rpc.md
 import (
 	"context"
-	"go-grpc-api-lab/pkg/opentelemetry-go/plugin/grpctrace"
+
+	"github.com/davidmontoyago/go-grpc-api-lab/pkg/opentelemetry-go/plugin/grpctrace"
 
 	"go.opentelemetry.io/otel/api/core"
 	"go.opentelemetry.io/otel/api/distributedcontext"

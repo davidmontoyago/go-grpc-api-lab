@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	api "go-grpc-api-lab/api/tls-auth"
-	"go-grpc-api-lab/pkg/osutil"
+	api "github.com/davidmontoyago/go-grpc-api-lab/api/tls-auth"
+	"github.com/davidmontoyago/go-grpc-api-lab/pkg/osutil"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

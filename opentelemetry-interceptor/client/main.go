@@ -5,15 +5,16 @@ import (
 	"log"
 	"time"
 
-	api "go-grpc-api-lab/api/hello-world"
-	"go-grpc-api-lab/opentelemetry-interceptor/config"
+	"github.com/davidmontoyago/go-grpc-api-lab/opentelemetry-interceptor/config"
+
+	api "github.com/davidmontoyago/go-grpc-api-lab/api/hello-world"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/davidmontoyago/go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/metric"
+	"github.com/davidmontoyago/go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/metric"
-	"go-grpc-api-lab/pkg/go.opentelemetry.io/otel/grpc/trace"
 )
 
 func main() {

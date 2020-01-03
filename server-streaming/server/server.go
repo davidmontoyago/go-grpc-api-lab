@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	api "go-grpc-api-lab/api/server-streaming"
 	"math/rand"
 	"time"
+
+	api "github.com/davidmontoyago/go-grpc-api-lab/api/server-streaming"
 )
 
 var random = rand.New(rand.NewSource(35))
