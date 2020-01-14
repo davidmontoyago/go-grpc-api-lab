@@ -11,7 +11,3 @@ Token signature can be symetric (HMAC) or assymetric (RSA).
 [OWASP JWT cheatsheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet_for_Java.html#introduction)
 
 [JWS vs JWE and JWT Compact vs JSON serialization](https://medium.facilelogin.com/jwt-jws-and-jwe-for-not-so-dummies-b63310d201a3)
-
-[Critical vulnerabilities in JSON Web Token libraries](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/)
-
-[JSON Web Encryption is a Foot-Gun](https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid)

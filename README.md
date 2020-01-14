@@ -20,6 +20,7 @@
 | Tracing and metering client/server interceptors with OpenTelemetry. | `./api/hello-world/` | `./opentelemetry-interceptor/` |
 | Server streaming to web app with gRPC-Web and grpcwebproxy [Failing]. | `./api/server-streaming/` | `./server-streaming-grpc-web/` |
 | JWT (as JWE) Auth with [square/go-jose](https://github.com/square/go-jose) | `./api/tls-auth/` | `./jwt-auth/` |
+| Paseto JSON token Auth with [o1egl/paseto](https://github.com/o1egl/paseto) | `./api/tls-auth/` | `./paseto-auth/` |
 
 
 ### Run example

@@ -1,17 +1,15 @@
-package jwt
+package paseto
 
 import (
 	"context"
 	"log"
 	"os"
-	"time"
 
 	"github.com/davidmontoyago/go-grpc-api-lab/pkg/httputil"
-	"gopkg.in/square/go-jose.v2/jwt"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/o1egl/paseto"
 	errorz "github.com/pkg/errors"
 )
 
@@ -32,33 +30,18 @@ func AuthServerInterceptor(ctx context.Context, req interface{}, info *grpc.Unar
 		log.Print(err)
 		return nil, err
 	}
-	// else Success!
 
 	return handler(ctx, req)
 }
 
-// deserialize and validate token claims
-func authenticateToken(token string, privateKey string) error {
-	jwtToken, err := jwt.ParseEncrypted(token)
+func authenticateToken(token string, symmetricKey string) error {
+	var newJSONToken paseto.JSONToken
+	var newFooter string
+	v2 := paseto.NewV2()
+
+	err := v2.Decrypt(token, []byte(symmetricKey), &newJSONToken, &newFooter)
 	if err != nil {
-		return errorz.Wrap(err, "failed parsing token")
+		return errorz.Wrap(err, "failed decrypting token")
 	}
-
-	// decrypt claims
-	claims := jwt.Claims{}
-	if err := jwtToken.Claims([]byte(privateKey), &claims); err != nil {
-		return errorz.Wrap(err, "failed to deserialize token")
-	}
-
-	// validate claims
-	err = claims.Validate(jwt.Expected{
-		Issuer: "auth-micro-service",
-		Time:   time.Now(),
-	})
-	if err != nil {
-		return errorz.Wrap(err, "invalid claims")
-	}
-
-	log.Printf("auth success! iss: %s, sub: %s\n", claims.Issuer, claims.Subject)
 	return nil
 }
