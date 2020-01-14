@@ -38,9 +38,9 @@ func main() {
 	keyFile := osutil.GetenvOrDefault("KEY_PEM", "./certs/self-signed-key.pem")
 
 	// in a Cloud Native environment secrets would be injected as env vars
-	_, present := os.LookupEnv("SIGNING_KEY")
+	_, present := os.LookupEnv("PRIVATE_KEY")
 	if !present {
-		log.Fatalf("JWT signing key not present! stopping now.")
+		log.Fatalf("JWT encryption key not present! stopping now.")
 	}
 
 	// Configure server TLS creds

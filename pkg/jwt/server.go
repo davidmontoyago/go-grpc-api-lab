@@ -27,7 +27,7 @@ func AuthServerInterceptor(ctx context.Context, req interface{}, info *grpc.Unar
 		return nil, err
 	}
 
-	err = authenticateToken(token, os.Getenv("SIGNING_KEY"))
+	err = authenticateToken(token, os.Getenv("PRIVATE_KEY"))
 	if err != nil {
 		log.Print(err)
 		return nil, err
@@ -50,12 +50,12 @@ func getBearerToken(md metadata.MD) (string, error) {
 
 // deserialize and validate token claims
 func authenticateToken(token string, privateKey string) error {
-	jwtToken, err := jwt.ParseSigned(token)
+	jwtToken, err := jwt.ParseEncrypted(token)
 	if err != nil {
 		return errorz.Wrap(err, "failed parsing token")
 	}
 
-	// deserialize claims
+	// decrypt claims
 	claims := jwt.Claims{}
 	if err := jwtToken.Claims([]byte(privateKey), &claims); err != nil {
 		return errorz.Wrap(err, "failed to deserialize token")
