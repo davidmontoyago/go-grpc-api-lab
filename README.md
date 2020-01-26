@@ -13,7 +13,7 @@
 
 | Example  	| .proto (IDL) 	| client/server impl  	|
 |---	|---	|---	|
-| Simple Hello World  	| `./api/hello-world/`  	| `./hello-world/`  	|
+| Hello World with health check and graceful termination  	| `./api/hello-world/`  	| `./hello-world/`  	|
 | Stream events down to multiple clients. <br/> Keeps an in-mem broker to subscribe clients and broadcast to all. | `./api/server-streaming/`  	  | `./server-streaming/`  	|
 | TLS Server Auth | `./api/tls-auth/`  	  | `./tls-auth/`  	|
 | Mutual TLS Auth. Uses in-mem copy of the host trustore to append self signed cert. | `./api/tls-auth/`  	  | `./mtls-auth/`  	|
@@ -26,14 +26,15 @@
 ### Run example
 
 ``` bash
-# compile protos
-make grpc
-
 go mod vendor
 
 go install ./...
 
 cd ./example
+
+# compile protos if changed
+make grpc
+
 make run-server
 make run-client
 ```
