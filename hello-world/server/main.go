@@ -16,8 +16,7 @@ import (
 )
 
 const (
-	port       = ":50051"
-	healthPort = ":50052"
+	port = ":50051"
 )
 
 // server is used to implement api.HelloServiceServer
@@ -32,36 +31,19 @@ func (s *apiServer) SayHello(ctx context.Context, in *api.HelloRequest) (*api.He
 }
 
 func main() {
-	hServer := grpc.NewServer()
-	go serveAPI(hServer)
-
-	apiServer := grpc.NewServer()
-	go serveHealth(apiServer)
+	grpcServer := grpc.NewServer()
 
 	// graceful shutdown
-	shutdown := make(chan os.Signal)
-	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
-	<-shutdown
-	log.Println("shutting down now...")
+	go func() {
+		shutdown := make(chan os.Signal)
+		signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+		<-shutdown
+		log.Println("shutting down now...")
+		grpcServer.GracefulStop()
+		os.Exit(0)
+	}()
 
-	hServer.GracefulStop()
-	apiServer.GracefulStop()
-	os.Exit(0)
-}
-
-func serveHealth(grpcServer *grpc.Server) {
-	lis, err := net.Listen("tcp", healthPort)
-	if err != nil {
-		log.Fatalf("failed to listen on %s: %v", port, err)
-	}
-
-	hServer := health.NewServer()
-	hServer.SetServingStatus("api.HelloService", healthgrpc.HealthCheckResponse_SERVING)
-
-	healthgrpc.RegisterHealthServer(grpcServer, hServer)
-	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	serveAPI(grpcServer)
 }
 
 func serveAPI(grpcServer *grpc.Server) {
@@ -71,6 +53,11 @@ func serveAPI(grpcServer *grpc.Server) {
 	}
 
 	api.RegisterHelloServiceServer(grpcServer, &apiServer{})
+
+	healthServer := health.NewServer()
+	healthServer.SetServingStatus("api.HelloService", healthgrpc.HealthCheckResponse_SERVING)
+	healthgrpc.RegisterHealthServer(grpcServer, healthServer)
+
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

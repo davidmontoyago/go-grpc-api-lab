@@ -31,8 +31,8 @@ func checkHealth() {
 	var err error
 	var hconn *grpc.ClientConn
 
-	healthAddr := getAddr("50052")
-	hconn, err = grpc.Dial(healthAddr, grpc.WithInsecure())
+	apiAddr := getAddr(osutil.GetenvOrDefault("server_port", "50051"))
+	hconn, err = grpc.Dial(apiAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("unable to connect to health endpoint: %s", err)
 	}
